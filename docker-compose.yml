@@ -1,0 +1,26 @@
+version: '3'
+services:
+#  app:
+#    image: 'pets_project:latest'
+#    build:
+#      context: .
+#    container_name: petsApp
+#    depends_on:
+#      - database
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_pets:5432/pets
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=root
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  database:
+    image: "postgres"
+    container_name: "db_pets"
+    env_file:
+      - database.env # configure postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+
+volumes:
+  database-data: # named volumes can be managed easier using docker-compose

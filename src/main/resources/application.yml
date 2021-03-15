@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pets
+    username: root
+    password: root
+    platform: org.hibernate.dialect.PostgreSQLDialect
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

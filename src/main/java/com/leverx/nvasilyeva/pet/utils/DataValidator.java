@@ -4,6 +4,7 @@ import com.leverx.nvasilyeva.pet.dto.request.OwnerCreateDTO;
 import com.leverx.nvasilyeva.pet.entity.Pet;
 import com.leverx.nvasilyeva.pet.entity.PetType;
 import com.leverx.nvasilyeva.pet.entity.Role;
+import com.leverx.nvasilyeva.pet.entity.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,18 @@ public class DataValidator {
 
     public boolean isCorrectRole(final String role) {
         return Arrays.stream(Role.values()).anyMatch((t) -> t.name().equals(role.toUpperCase(Locale.ROOT)));
+    }
+
+    public boolean isCatType(final String petType) {
+        return PetType.valueOf(petType.toUpperCase(Locale.ROOT)).equals(PetType.CAT);
+    }
+
+    public boolean isDogType(final String petType) {
+        return PetType.valueOf(petType.toUpperCase(Locale.ROOT)).equals(PetType.DOG);
+    }
+
+    public boolean isCorrectSize(final String size) {
+        return Arrays.stream(Size.values()).anyMatch((t) -> t.name().equals(size.toUpperCase(Locale.ROOT)));
     }
 
 }

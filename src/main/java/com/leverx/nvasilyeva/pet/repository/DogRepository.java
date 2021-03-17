@@ -5,8 +5,10 @@ import com.leverx.nvasilyeva.pet.entity.Dog;
 import com.leverx.nvasilyeva.pet.entity.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface DogRepository  extends JpaRepository<Dog, Long> {
 
-    Cat findAllBySize(Size size);
-    Cat findAllByOwnerIdAndSize(String ownerId, Size size);
+    List<Dog> findAllBySize(Size size);
+
 }

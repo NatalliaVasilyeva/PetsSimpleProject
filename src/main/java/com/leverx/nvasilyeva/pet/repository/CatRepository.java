@@ -3,10 +3,11 @@ package com.leverx.nvasilyeva.pet.repository;
 import com.leverx.nvasilyeva.pet.entity.Cat;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 
 public interface CatRepository extends JpaRepository<Cat, Long> {
 
-    Cat findAllByColor(String color);
-    Cat findAllByOwnerIdAndColor(String ownerId, String color);
+    List<Cat> findAllByColor(String color);
 
 }

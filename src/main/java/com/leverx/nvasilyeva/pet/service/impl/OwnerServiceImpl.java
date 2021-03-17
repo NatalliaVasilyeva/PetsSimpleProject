@@ -1,6 +1,7 @@
 package com.leverx.nvasilyeva.pet.service.impl;
 
 
+import com.leverx.nvasilyeva.pet.dto.mapper.OwnerMapper;
 import com.leverx.nvasilyeva.pet.dto.request.OwnerCreateDTO;
 import com.leverx.nvasilyeva.pet.dto.response.OwnerResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.PetResponseDTO;
@@ -65,10 +66,18 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public List<OwnerResponseDTO> saveAll(List<OwnerCreateDTO> owners) {
-        return owners
-                .stream()
-                .map(this::save)
-                .collect(Collectors.toList());
+        owners
+                .forEach(validator::validateOwnerPassword);
+
+        owners
+                .forEach(this::validateOwnersByEmails);
+
+
+        return convertListOfOwnersToListOfOwnerResponseDTO(
+                owners
+                        .stream()
+                        .map(this::createOrUpdateOwner)
+                        .collect(Collectors.toList()));
 
     }
 
@@ -108,7 +117,7 @@ public class OwnerServiceImpl implements OwnerService {
         validateOwnersById(ownerId);
         if (nonNull(petType)&&validator.isCorrectPetType(petType.name())) {
             return convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOrderByOwnerIdAndPetType(ownerId, petType));
-        };
+        }
 
         return convertListOfPetsToListOfPetResponseDTO(ownerRepository.getOne(ownerId).getPets());
     }

@@ -1,14 +1,18 @@
 package com.leverx.nvasilyeva.pet.service.impl;
 
-
-import com.leverx.nvasilyeva.pet.dto.mapper.OwnerMapper;
+import com.leverx.nvasilyeva.pet.dto.mapper.CatMapper;
+import com.leverx.nvasilyeva.pet.dto.mapper.DogMapper;
 import com.leverx.nvasilyeva.pet.dto.request.OwnerCreateDTO;
+import com.leverx.nvasilyeva.pet.dto.response.CatResponseDTO;
+import com.leverx.nvasilyeva.pet.dto.response.DogResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.OwnerResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.PetResponseDTO;
 import com.leverx.nvasilyeva.pet.entity.Owner;
 import com.leverx.nvasilyeva.pet.entity.PetType;
 import com.leverx.nvasilyeva.pet.entity.Role;
 import com.leverx.nvasilyeva.pet.exception.NoSuchElementFoundException;
+import com.leverx.nvasilyeva.pet.repository.CatRepository;
+import com.leverx.nvasilyeva.pet.repository.DogRepository;
 import com.leverx.nvasilyeva.pet.repository.OwnerRepository;
 import com.leverx.nvasilyeva.pet.repository.PetRepository;
 import com.leverx.nvasilyeva.pet.service.OwnerService;
@@ -33,18 +37,25 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnerRepository ownerRepository;
     private final DataValidator validator;
     private final PetRepository petRepository;
+    private final DogRepository dogRepository;
+    private final CatRepository catRepository;
 
 
     @Autowired
     public OwnerServiceImpl(OwnerRepository ownerRepository,
                             DataValidator validator,
                             PetRepository petRepository,
-                            PasswordEncoder passwordEncoder, DataValidator dataValidator) {
+                            PasswordEncoder passwordEncoder,
+                            DataValidator dataValidator,
+                            DogRepository dogRepository,
+                            CatRepository catRepository) {
         this.ownerRepository = ownerRepository;
         this.validator = validator;
         this.petRepository = petRepository;
         this.passwordEncoder = passwordEncoder;
         this.dataValidator = dataValidator;
+        this.dogRepository = dogRepository;
+        this.catRepository = catRepository;
     }
 
     @Override
@@ -60,7 +71,7 @@ public class OwnerServiceImpl implements OwnerService {
 
         validator.validateOwnerPassword(ownerCreateDTO);
         validateOwnersByEmails(ownerCreateDTO);
-        Owner owner=createOrUpdateOwner(ownerCreateDTO);
+        Owner owner = createOrUpdateOwner(ownerCreateDTO);
         return convertOwnerToOwnerResponseDTOWithoutPets(ownerRepository.save(owner));
     }
 
@@ -92,7 +103,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public OwnerResponseDTO update(long ownerId, OwnerCreateDTO ownerCreateDTO) {
         validateOwnersById(ownerId);
-        Owner owner=createOrUpdateOwner(ownerCreateDTO);
+        Owner owner = createOrUpdateOwner(ownerCreateDTO);
         return convertOwnerToOwnerResponseDTOWithoutPets(ownerRepository.save(owner));
     }
 
@@ -113,15 +124,26 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public List<PetResponseDTO> getAllOwnerPetsByPetType(long ownerId, PetType petType) {
+    public List<PetResponseDTO> getAllOwnerPetsByPetType(long ownerId, String petType) {
         validateOwnersById(ownerId);
-        if (nonNull(petType)&&validator.isCorrectPetType(petType.name())) {
-            return convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOrderByOwnerIdAndPetType(ownerId, petType));
+        if (nonNull(petType) && validator.isCorrectPetType(petType)) {
+            return convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOrderByOwnerIdAndPetType(ownerId, PetType.valueOf(petType)));
         }
 
         return convertListOfPetsToListOfPetResponseDTO(ownerRepository.getOne(ownerId).getPets());
     }
 
+    @Override
+    public List<DogResponseDTO> getAllOwnerDogs(long ownerId) {
+        validateOwnersById(ownerId);
+        return DogMapper.convertListOfDogsToListOfDogsResponseDTO(dogRepository.findAllByOrderByOwnerId(ownerId));
+    }
+
+    @Override
+    public List<CatResponseDTO> getAllOwnerCats(long ownerId) {
+        validateOwnersById(ownerId);
+        return CatMapper.convertListOfCatsToListOfCatResponseDTO(catRepository.findAllByOrderByOwnerId(ownerId));
+    }
 
     private void validateOwnersByEmails(OwnerCreateDTO ownerDTO) {
         if (ownerRepository.isExistByEmail(ownerDTO.getEmail())) {

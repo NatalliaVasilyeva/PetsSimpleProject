@@ -46,6 +46,5 @@ public class PetServiceImpl implements PetService {
     @Override
     public void deleteAll() {
         petRepository.deleteAll();
-
     }
 }

@@ -2,7 +2,6 @@ package com.leverx.nvasilyeva.pet.service;
 
 import com.leverx.nvasilyeva.pet.dto.request.CatCreateDTO;
 import com.leverx.nvasilyeva.pet.dto.response.CatResponseDTO;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

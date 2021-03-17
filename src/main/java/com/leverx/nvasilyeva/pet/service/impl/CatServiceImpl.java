@@ -8,7 +8,6 @@ import com.leverx.nvasilyeva.pet.entity.PetType;
 import com.leverx.nvasilyeva.pet.exception.NoSuchElementFoundException;
 import com.leverx.nvasilyeva.pet.repository.CatRepository;
 import com.leverx.nvasilyeva.pet.repository.OwnerRepository;
-import com.leverx.nvasilyeva.pet.repository.PetRepository;
 import com.leverx.nvasilyeva.pet.service.CatService;
 import com.leverx.nvasilyeva.pet.utils.DataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,12 @@ public class CatServiceImpl implements CatService {
 
     private CatRepository catRepository;
     private OwnerRepository ownerRepository;
-    private PetRepository petRepository;
     private DataValidator validator;
 
     @Autowired
-    public CatServiceImpl(CatRepository catRepository, OwnerRepository ownerRepository, PetRepository petRepository, DataValidator validator) {
+    public CatServiceImpl(CatRepository catRepository, OwnerRepository ownerRepository, DataValidator validator) {
         this.catRepository = catRepository;
         this.ownerRepository = ownerRepository;
-        this.petRepository = petRepository;
         this.validator = validator;
     }
 

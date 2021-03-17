@@ -1,9 +1,10 @@
 package com.leverx.nvasilyeva.pet.service;
 
 import com.leverx.nvasilyeva.pet.dto.request.OwnerCreateDTO;
+import com.leverx.nvasilyeva.pet.dto.response.CatResponseDTO;
+import com.leverx.nvasilyeva.pet.dto.response.DogResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.OwnerResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.PetResponseDTO;
-import com.leverx.nvasilyeva.pet.entity.PetType;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public interface OwnerService {
     List<OwnerResponseDTO> findAllOwners();
     void deleteAll();
     List<PetResponseDTO> getAllOwnerPets(long ownerId);
-    List<PetResponseDTO> getAllOwnerPetsByPetType(long ownerId, PetType petType);
+    List<PetResponseDTO> getAllOwnerPetsByPetType(long ownerId, String petType);
+    List<DogResponseDTO> getAllOwnerDogs(long ownerId);
+    List<CatResponseDTO> getAllOwnerCats(long ownerId);
 
 }

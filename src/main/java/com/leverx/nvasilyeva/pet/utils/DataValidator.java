@@ -32,23 +32,23 @@ public class DataValidator {
     }
 
     public boolean isCorrectPetType(final String petType) {
-        return Arrays.stream(PetType.values()).anyMatch((t) -> t.name().equals(petType.toUpperCase(Locale.ROOT)));
+        return Arrays.stream(PetType.values()).anyMatch((t) -> t.name().equalsIgnoreCase(petType));
     }
 
     public boolean isCorrectRole(final String role) {
-        return Arrays.stream(Role.values()).anyMatch((t) -> t.name().equals(role.toUpperCase(Locale.ROOT)));
+        return Arrays.stream(Role.values()).anyMatch((t) -> t.name().equalsIgnoreCase(role));
     }
 
     public boolean isCatType(final String petType) {
-        return PetType.valueOf(petType.toUpperCase(Locale.ROOT)).equals(PetType.CAT);
+        return PetType.valueOf(petType.toUpperCase()).equals(PetType.CAT);
     }
 
     public boolean isDogType(final String petType) {
-        return PetType.valueOf(petType.toUpperCase(Locale.ROOT)).equals(PetType.DOG);
+        return PetType.valueOf(petType.toUpperCase()).equals(PetType.DOG);
     }
 
     public boolean isCorrectSize(final String size) {
-        return Arrays.stream(Size.values()).anyMatch((t) -> t.name().equals(size.toUpperCase(Locale.ROOT)));
+        return Arrays.stream(Size.values()).anyMatch((t) -> t.name().equalsIgnoreCase(size));
     }
 
 }

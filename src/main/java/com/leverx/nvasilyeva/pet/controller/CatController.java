@@ -35,7 +35,7 @@ public class CatController {
         return ResponseEntity.created(location).body(catResponseDTO);
     }
 
-    @PostMapping
+    @PostMapping(value = "/createAll")
     public ResponseEntity<List<CatResponseDTO>> createAll(@Valid @RequestBody List<CatCreateDTO> cats) {
         List<CatResponseDTO> catResponseDTOs = catService.saveAll(cats);
         return ResponseEntity.status(HttpStatus.OK).body(catResponseDTOs);

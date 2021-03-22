@@ -1,6 +1,10 @@
 package com.leverx.nvasilyeva.pet.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +24,7 @@ import java.time.LocalDate;
 @Table(name = "pets")
 public class Pet {
     @Id
+    @Column(name = "pet_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
@@ -32,11 +37,13 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private PetType petType;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthday;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
-    @JsonBackReference(value = "owner-pet")
     private Owner owner;
 
 }

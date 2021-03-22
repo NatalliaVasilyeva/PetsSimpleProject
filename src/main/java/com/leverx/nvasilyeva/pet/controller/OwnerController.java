@@ -1,8 +1,6 @@
 package com.leverx.nvasilyeva.pet.controller;
 
 import com.leverx.nvasilyeva.pet.dto.request.OwnerCreateDTO;
-import com.leverx.nvasilyeva.pet.dto.response.CatResponseDTO;
-import com.leverx.nvasilyeva.pet.dto.response.DogResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.OwnerResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.PetResponseDTO;
 import com.leverx.nvasilyeva.pet.service.OwnerService;
@@ -38,7 +36,7 @@ public class OwnerController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
+    @PostMapping("/createAll")
     public ResponseEntity<List<OwnerResponseDTO>> createAll(@Valid @RequestBody List<OwnerCreateDTO> owners) {
         List<OwnerResponseDTO> ownerResponseDTOs = ownerService.saveAll(owners);
         return ResponseEntity.status(HttpStatus.OK).body(ownerResponseDTOs);
@@ -90,14 +88,14 @@ public class OwnerController {
     }
 
     @GetMapping("/{id}/dogs")
-    public ResponseEntity<List<DogResponseDTO>> getAllOwnerDogs(
+    public ResponseEntity<List<PetResponseDTO>> getAllOwnerDogs(
             @PathVariable("id") Long ownerId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(ownerService.getAllOwnerDogs(ownerId));
     }
 
     @GetMapping("/{id}/cats")
-    public ResponseEntity<List<CatResponseDTO>> getAllOwnerCats(
+    public ResponseEntity<List<PetResponseDTO>> getAllOwnerCats(
             @PathVariable("id") Long ownerId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(ownerService.getAllOwnerCats(ownerId));

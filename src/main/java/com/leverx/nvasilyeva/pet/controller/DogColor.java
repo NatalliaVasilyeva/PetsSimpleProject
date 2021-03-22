@@ -36,7 +36,7 @@ public class DogColor {
         return ResponseEntity.created(location).body(dogResponseDTO);
     }
 
-    @PostMapping
+    @PostMapping("/createAll")
     public ResponseEntity<List<DogResponseDTO>> createAll(@Valid @RequestBody List<DogCreateDTO> dogs) {
         List<DogResponseDTO> dogResponseDTOs = dogService.saveAll(dogs);
         return ResponseEntity.status(HttpStatus.OK).body(dogResponseDTOs);

@@ -1,9 +1,9 @@
 package com.leverx.nvasilyeva.pet.exception;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler  {
 
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<IllegalArgumentException> handleIllegalArgumentException(
@@ -40,25 +40,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(NoSuchElementFoundException.class)
-    protected ResponseEntity<NoSuchElementFoundException> handleNoSuchElementFoundException(
-            NoSuchElementFoundException exception) {
-        return new ResponseEntity<>(new NoSuchElementFoundException("No such element exception. Exception" +
-                exception, exception.getCause()), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(value = {HttpClientErrorException.class, HttpServerErrorException.class})
-    protected ResponseEntity<String> handleHttpErrorException(
-            Exception exception) {
-        if (exception instanceof HttpClientErrorException) {
-            return ResponseEntity.status(((HttpClientErrorException) exception).getStatusCode()).body("Error on client side");
-        } else if (exception instanceof HttpServerErrorException) {
-            return ResponseEntity.status(((HttpServerErrorException) exception).getStatusCode()).body("Error on server side");
-        }
-        return null;
-    }
-
-
     @ExceptionHandler(HttpServerErrorException.class)
     protected ResponseEntity<String> handleHttpClientErrorException(
             HttpClientErrorException exception) {
@@ -77,7 +58,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(x -> x.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
         body.put("errors", errors);

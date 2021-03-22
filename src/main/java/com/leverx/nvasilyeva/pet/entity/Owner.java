@@ -1,6 +1,11 @@
 package com.leverx.nvasilyeva.pet.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +28,7 @@ import java.util.List;
 public class Owner {
 
     @Id
+    @Column(name = "owner_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
@@ -31,7 +37,7 @@ public class Owner {
     private String username;
 
     @NotNull
-    @Pattern(message ="Please use pattern", regexp = "((?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
+    @Pattern(message ="Please use pattern", regexp = "^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!#$%&? \"]).*$")
     private String password;
 
     @NotNull
@@ -39,13 +45,15 @@ public class Owner {
             regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
     private String email;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthdate;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", cascade = { CascadeType.ALL, CascadeType.PERSIST, CascadeType.MERGE })
-    @JsonManagedReference(value = "owner-pet")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     private List<Pet> pets;
 
 }

@@ -1,7 +1,7 @@
 package com.leverx.nvasilyeva.pet.service.impl;
 
 import com.leverx.nvasilyeva.pet.dto.mapper.CatMapper;
-import com.leverx.nvasilyeva.pet.dto.mapper.DogMapper;
+import com.leverx.nvasilyeva.pet.dto.mapper.PetMapper;
 import com.leverx.nvasilyeva.pet.dto.request.OwnerCreateDTO;
 import com.leverx.nvasilyeva.pet.dto.response.CatResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.DogResponseDTO;
@@ -127,26 +127,26 @@ public class OwnerServiceImpl implements OwnerService {
     public List<PetResponseDTO> getAllOwnerPetsByPetType(long ownerId, String petType) {
         validateOwnersById(ownerId);
         if (nonNull(petType) && validator.isCorrectPetType(petType)) {
-            return convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOrderByOwnerIdAndPetType(ownerId, PetType.valueOf(petType)));
+            return convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOwner_IdAndPetType(ownerId, PetType.valueOf(petType)));
         }
 
         return convertListOfPetsToListOfPetResponseDTO(ownerRepository.getOne(ownerId).getPets());
     }
 
     @Override
-    public List<DogResponseDTO> getAllOwnerDogs(long ownerId) {
+    public List<PetResponseDTO> getAllOwnerDogs(long ownerId) {
         validateOwnersById(ownerId);
-        return DogMapper.convertListOfDogsToListOfDogsResponseDTO(dogRepository.findAllByOrderByOwnerId(ownerId));
+        return PetMapper.convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOwner_IdAndPetType(ownerId, PetType.DOG));
     }
 
     @Override
-    public List<CatResponseDTO> getAllOwnerCats(long ownerId) {
+    public List<PetResponseDTO> getAllOwnerCats(long ownerId) {
         validateOwnersById(ownerId);
-        return CatMapper.convertListOfCatsToListOfCatResponseDTO(catRepository.findAllByOrderByOwnerId(ownerId));
+        return PetMapper.convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOwner_IdAndPetType(ownerId, PetType.CAT));
     }
 
     private void validateOwnersByEmails(OwnerCreateDTO ownerDTO) {
-        if (ownerRepository.isExistByEmail(ownerDTO.getEmail())) {
+        if (ownerRepository.existsOwnerByEmail(ownerDTO.getEmail())) {
             throw new IllegalArgumentException("User exist with this email. Please, use other email");
         }
     }
@@ -166,10 +166,10 @@ public class OwnerServiceImpl implements OwnerService {
         owner.setPassword(encodePassword(ownerCreateDTO));
 
         String role = ownerCreateDTO.getRole();
-        if (dataValidator.isCorrectRole(role) && !role.toUpperCase(Locale.ROOT).equals("ADMIN")) {
-            owner.setRole(Role.valueOf(role));
-        } else {
+        if (!dataValidator.isCorrectRole(role) || role.equalsIgnoreCase("ADMIN")) {
             owner.setRole(Role.USER);
+        } else {
+            owner.setRole(Role.valueOf(role.toUpperCase()));
         }
         return owner;
     }

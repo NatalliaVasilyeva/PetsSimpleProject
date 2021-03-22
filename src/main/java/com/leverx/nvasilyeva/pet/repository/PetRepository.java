@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
-    List<Pet> findAllByOrderByOwnerIdAndPetType(long ownerId, PetType petType);
+    List<Pet> findAllByOwner_IdAndPetType(long ownerId, PetType petType);
 
     @Modifying
     @Query(value = "update pets p set owner_id = null where owner_id= :ownerId", nativeQuery = true)

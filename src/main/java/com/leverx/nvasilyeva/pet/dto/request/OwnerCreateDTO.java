@@ -1,5 +1,10 @@
 package com.leverx.nvasilyeva.pet.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,19 +19,21 @@ public class OwnerCreateDTO {
     private String username;
 
     @NotNull
-    @Pattern(message ="Please use pattern", regexp = "((?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
+    @Pattern(message ="Please use pattern", regexp = "^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!#$%&? \"]).*$")
     private String password;
 
     @NotNull
-    @Pattern(message ="Please use pattern", regexp = "((?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
+    @Pattern(message ="Please use pattern", regexp = "^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!#$%&? \"]).*$")
     private String confirmPassword;
 
     @Email(message = "Email address has invalid format: ${validatedValue}",
             regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
     private String email;
 
-    @DateTimeFormat(pattern = "DD-MM-YYYY")
-    private LocalDate birthdate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate birthday;
 
     private String role;
 

@@ -16,7 +16,7 @@ public class OwnerMapper {
                 .builder()
                 .username(ownerDTO.getUsername())
                 .email(ownerDTO.getEmail())
-                .birthdate(ownerDTO.getBirthdate())
+                .birthdate(ownerDTO.getBirthday())
                 .build();
     }
 

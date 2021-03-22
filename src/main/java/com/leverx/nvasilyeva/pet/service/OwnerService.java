@@ -18,7 +18,7 @@ public interface OwnerService {
     void deleteAll();
     List<PetResponseDTO> getAllOwnerPets(long ownerId);
     List<PetResponseDTO> getAllOwnerPetsByPetType(long ownerId, String petType);
-    List<DogResponseDTO> getAllOwnerDogs(long ownerId);
-    List<CatResponseDTO> getAllOwnerCats(long ownerId);
+    List<PetResponseDTO> getAllOwnerDogs(long ownerId);
+    List<PetResponseDTO> getAllOwnerCats(long ownerId);
 
 }

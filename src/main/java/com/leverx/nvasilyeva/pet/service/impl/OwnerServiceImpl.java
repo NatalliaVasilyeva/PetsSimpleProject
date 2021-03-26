@@ -3,16 +3,12 @@ package com.leverx.nvasilyeva.pet.service.impl;
 import com.leverx.nvasilyeva.pet.dto.mapper.CatMapper;
 import com.leverx.nvasilyeva.pet.dto.mapper.PetMapper;
 import com.leverx.nvasilyeva.pet.dto.request.OwnerCreateDTO;
-import com.leverx.nvasilyeva.pet.dto.response.CatResponseDTO;
-import com.leverx.nvasilyeva.pet.dto.response.DogResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.OwnerResponseDTO;
 import com.leverx.nvasilyeva.pet.dto.response.PetResponseDTO;
 import com.leverx.nvasilyeva.pet.entity.Owner;
 import com.leverx.nvasilyeva.pet.entity.PetType;
 import com.leverx.nvasilyeva.pet.entity.Role;
 import com.leverx.nvasilyeva.pet.exception.NoSuchElementFoundException;
-import com.leverx.nvasilyeva.pet.repository.CatRepository;
-import com.leverx.nvasilyeva.pet.repository.DogRepository;
 import com.leverx.nvasilyeva.pet.repository.OwnerRepository;
 import com.leverx.nvasilyeva.pet.repository.PetRepository;
 import com.leverx.nvasilyeva.pet.service.OwnerService;
@@ -22,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static com.leverx.nvasilyeva.pet.dto.mapper.OwnerMapper.*;
@@ -37,8 +32,6 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnerRepository ownerRepository;
     private final DataValidator validator;
     private final PetRepository petRepository;
-    private final DogRepository dogRepository;
-    private final CatRepository catRepository;
 
 
     @Autowired
@@ -46,16 +39,12 @@ public class OwnerServiceImpl implements OwnerService {
                             DataValidator validator,
                             PetRepository petRepository,
                             PasswordEncoder passwordEncoder,
-                            DataValidator dataValidator,
-                            DogRepository dogRepository,
-                            CatRepository catRepository) {
+                            DataValidator dataValidator) {
         this.ownerRepository = ownerRepository;
         this.validator = validator;
         this.petRepository = petRepository;
         this.passwordEncoder = passwordEncoder;
         this.dataValidator = dataValidator;
-        this.dogRepository = dogRepository;
-        this.catRepository = catRepository;
     }
 
     @Override
@@ -113,6 +102,17 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    public Owner findByUsernameAndPassword(String username, String password) {
+        Owner owner = ownerRepository.findOwnerByUsername(username);
+        if (owner != null) {
+            if (passwordEncoder.matches(password, owner.getPassword())) {
+                return owner;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void deleteAll() {
         ownerRepository.deleteAll();
     }
@@ -143,6 +143,11 @@ public class OwnerServiceImpl implements OwnerService {
     public List<PetResponseDTO> getAllOwnerCats(long ownerId) {
         validateOwnersById(ownerId);
         return PetMapper.convertListOfPetsToListOfPetResponseDTO(petRepository.findAllByOwner_IdAndPetType(ownerId, PetType.CAT));
+    }
+
+    @Override
+    public Owner findByUsername(String username) {
+        return ownerRepository.findOwnerByUsername(username);
     }
 
     private void validateOwnersByEmails(OwnerCreateDTO ownerDTO) {

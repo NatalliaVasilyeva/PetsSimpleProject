@@ -14,8 +14,10 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static com.leverx.nvasilyeva.pet.config.ControllerConstant.OWNER_API;
+
 @RestController
-@RequestMapping("/api/v1/owners")
+@RequestMapping(OWNER_API)
 public class OwnerController {
 
     private OwnerService ownerService;

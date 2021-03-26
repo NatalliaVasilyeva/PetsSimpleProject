@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.leverx.nvasilyeva.pet.config.ControllerConstant.PET_API;
+
 @RestController
-@RequestMapping("/api/v1/pets")
+@RequestMapping(PET_API)
 public class PetController {
 
     private PetService petService;

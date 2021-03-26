@@ -13,8 +13,10 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static com.leverx.nvasilyeva.pet.config.ControllerConstant.CAT_API;
+
 @RestController
-@RequestMapping("/api/v1/cats")
+@RequestMapping(CAT_API)
 public class CatController {
 
     private CatService catService;

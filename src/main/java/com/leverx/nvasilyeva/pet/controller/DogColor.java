@@ -14,8 +14,10 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static com.leverx.nvasilyeva.pet.config.ControllerConstant.DOG_API;
+
 @RestController
-@RequestMapping("/api/v1/dogs")
+@RequestMapping(DOG_API)
 public class DogColor {
 
     private DogService dogService;

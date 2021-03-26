@@ -19,3 +19,7 @@ spring:
   web:
     resources:
       add-mappings: false
+
+jwt:
+  secret: petjava
+
